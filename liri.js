@@ -28,46 +28,56 @@ switch (action) {
 
 //    * `spotify-this-song`
 
-//    * `movie-this`
-
-
-
-// var request = require("request");
-// var nodeArgs = process.argv[3];
-// var movieName = "";
-
+// * `movie-this`
 function movie(){
 	var request = require("request");
 	var nodeArgs = process.argv;
 	var movieName = "";
-for (var i = 2; i < nodeArgs.length; i++) {
 
-  if (i > 2 && i < nodeArgs.length) {
-    movieName = movieName + "+" + nodeArgs[i];
+  // pulls the user input and adds a + between the words
+  for (var i = 3; i < nodeArgs.length; i++) {
+
+    if (i > 3 && i < nodeArgs.length) {
+      movieName = movieName + "+" + nodeArgs[i];
+    }
+
+    else {
+      movieName += nodeArgs[i];
+    }
   }
 
+  var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
+
+  // if the user does not input a movie
+  if (movieName == ""){
+    request("http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=40e9cece", function(error, response,body){
+      if (!error && response.statusCode === 200) {
+        console.log("Title: " + JSON.parse(body).Title);
+        console.log("Release Year: " + JSON.parse(body).Year);
+        console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+        console.log("Country Produced In: " + JSON.parse(body).Country);
+        console.log("Language: " + JSON.parse(body).Language);
+        console.log("Plot: " + JSON.parse(body).Plot);
+        console.log("Actors Featured: " + JSON.parse(body).Actors);
+        // console.log("Link to Rotten Tomatoes: " + JSON.parse(body).Ratings[1]);
+      }
+    });
+  }
+  // if the user enters in a movie
   else {
-    movieName += nodeArgs[i];
+    request(queryUrl, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+      	console.log("Title: " + JSON.parse(body).Title);
+        console.log("Release Year: " + JSON.parse(body).Year);
+        console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+        console.log("Country Produced In: " + JSON.parse(body).Country);
+        console.log("Language: " + JSON.parse(body).Language);
+        console.log("Plot: " + JSON.parse(body).Plot);
+        console.log("Actors Featured: " + JSON.parse(body).Actors);
+        // console.log("Link to Rotten Tomatoes: " + JSON.parse(body).Ratings[1]);
+      }
+    });
   }
-}
-
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
-console.log(queryUrl);
-
-
-request(queryUrl, function(error, response, body) {
-  if (!error && response.statusCode === 200) {
-  	console.log("Title: " + JSON.parse(body).Title);
-    console.log("Release Year: " + JSON.parse(body).Year);
-    console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-    console.log("Country Produced In: " + JSON.parse(body).Country);
-    console.log("Language: " + JSON.parse(body).Language);
-    console.log("Plot: " + JSON.parse(body).Plot);
-    console.log("Actors Featured: " + JSON.parse(body).Actors);
-    // console.log("Link to Rotten Tomatoes: " + JSON.parse(body).Ratings[1]);
-  }
-});
-
 }
 //    * `do-what-it-says`
 
