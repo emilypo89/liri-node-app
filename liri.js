@@ -5,9 +5,9 @@ var userInput = process.argv[3];
 
 // The switch-case will direct which function gets run.
 switch (action) {
-  // case "my-tweets":
-  //   readTweets();
-  //   break;
+  case "my-tweets":
+    readTweets();
+    break;
 
   // case "spotify-this-song":
   //   spotifySong();
@@ -24,7 +24,30 @@ switch (action) {
     console.log("Invalid Input");
 }
 
-//    * `my-tweets`
+// * `my-tweets`
+function readTweets(){
+// var twitterKeys =;
+  var Twitter = require('twitter');
+  var twitterKeys = require("./keys.js");
+ 
+  var client = new Twitter({
+  consumer_key: twitterKeys.twitterKeys.consumer_key,
+  consumer_secret: twitterKeys.twitterKeys.consumer_secret,
+  access_token_key: twitterKeys.twitterKeys.access_token_key,
+  access_token_secret: twitterKeys.twitterKeys.access_token_secret,
+  });
+ 
+  var params = {screen_name: 'anthroDev'};
+  client.get('statuses/user_timeline', params, function(error, tweets, response) {
+    if (!error) {
+      console.log(tweets);
+    }
+
+    else {
+      console.log(error);
+    }
+  });
+}
 
 //    * `spotify-this-song`
 
