@@ -1,4 +1,3 @@
-// 7. Make it so liri.js can take in one of the following commands:
 var fs = require("fs");
 var action = process.argv[2];
 var userInput = process.argv[3];
@@ -17,9 +16,10 @@ switch (action) {
     movie();
     break;
 
-  // case "do-what-it-says":
-  //   whatItSays();
-  //   break;
+  case "do-what-it-says":
+    whatItSays();
+    break;
+
   default:
     console.log("Invalid Input");
 }
@@ -40,7 +40,11 @@ function readTweets(){
   var params = {screen_name: 'anthroDev'};
   client.get('statuses/user_timeline', params, function(error, tweets, response) {
     if (!error) {
-      console.log(tweets);
+      for (var i = 0; i < tweets.length; i++) {
+        console.log(tweets[i].text);
+        console.log(tweets[i].created_at);
+      }
+      
     }
     else {
       console.log(error);
@@ -48,16 +52,18 @@ function readTweets(){
   });
 }
 
-//    * `spotify-this-song`
+var songSearch = "";
+//* `spotify-this-song`
 function spotifySong () {
   var Spotify = require('node-spotify-api');
+  var spotifyKeys = require("./keys.js");
  
   var spotify = new Spotify({
-    id: '6c24d65f73f74616891a1d7f69eb92e8',
-    secret: '8b40ae994ff544099fa1eeda48ae7bce'
+    id: spotifyKeys.spotifyKeys.id,
+    secret: spotifyKeys.spotifyKeys.secret
   });
   var nodeArgs = process.argv;
-  var songSearch = "";
+  
 
   // pulls the user input and adds a + between the words
   for (var i = 3; i < nodeArgs.length; i++) {
@@ -148,4 +154,21 @@ function movie(){
   }
 }
 //    * `do-what-it-says`
+function whatItSays () {
+  fs.readFile("random.txt", "utf8", function(error, data) {
 
+  // If the code experiences any errors it will log the error to the console.
+  if (error) {
+    return console.log(error);
+  }
+
+  // console.log(data);
+
+  var dataArr = data.split(", ");
+  // console.log(dataArr);
+  if (dataArr[0] == "spotify-this-song") {
+    songSearch = dataArr[1];
+    spotifySong();
+  } 
+});
+}
